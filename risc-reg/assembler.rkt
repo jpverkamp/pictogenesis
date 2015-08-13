@@ -1,7 +1,7 @@
 #lang racket
 
 
-(provide assemble)
+(provide assemble disassemble)
 
 (require "language.rkt"
          "state.rkt")
@@ -83,3 +83,44 @@
     (bytes-set! resulting-bytes index (hash-ref label-targets label)))
   
   resulting-bytes)
+
+(define (disassemble bytes)
+  (let loop ([index 0] [code '()])
+    
+    (cond
+      [(>= index (bytes-length bytes))
+       (string-join (map (λ (instr) (string-join (map ~a instr)))
+                         (reverse code)) 
+                    "\n")]
+      [else
+       (define byte (bytes-ref bytes index))
+       (define op-code (arithmetic-shift byte -4))
+       (define immediate? (not (zero? (bitwise-and byte   #b00001000))))
+       (define conditional? (not (zero? (bitwise-and byte #b00000100))))
+       
+       (match-define (op name arity _) (vector-ref language op-code))
+       
+       (define op-asm
+         (string->symbol
+          (~a name
+              (if immediate? "!" "")
+              (if conditional? "?" ""))))
+       
+       (cond
+         [(< (+ index arity 1) (bytes-length bytes))
+          (define op+args
+            (cons op-asm
+                  (for/list ([offset (in-range arity)])
+                    (bytes-ref bytes (+ index offset 1)))))
+          
+          (loop (+ index arity 1)
+                (cons op+args code))]
+         [else
+          (loop (+ index arity 1)
+                (cons '(NOP) code))])])))
+    
+    
+       
+      
+            
+  
