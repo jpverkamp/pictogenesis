@@ -23,7 +23,11 @@
                              (/ c 256.0)))))
 
 (let loop ([i 0])
-  (define fn  (format "images/~a.png" (~a i #:min-width 8 #:align 'right #:left-pad-string "0")))
+  (make-directory* "images")
+  (define fn 
+    (build-path "images" 
+                (format "~a.png" 
+                        (~a i #:min-width 8 #:align 'right #:left-pad-string "0"))))
   (printf "~a\n" fn)
   
   (set! non-zero #f)
