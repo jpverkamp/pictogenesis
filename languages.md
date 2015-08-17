@@ -49,3 +49,24 @@ Functional
 ==========
 
 TODO
+
+Pre-defined functions
+=====================
+
+random - generate a random number [0, 1]
+binomial m d - generate a random number with a binomial distribution (mean, std dev)
+
+min a b - return the smaller of a and b
+max a b - return the larger of a and b
+
+sin v - sin of v
+cos v - cos of v
+tan v - tan of v
+
+arcsin v - arcsin of v (?)
+arccos v - arccos of v (?)
+arctan v - arctan of v (?)
+
+exp v e - calculate v ** e
+log v - calculate the natural log of v
+sqrt v - calculate the square root of v
